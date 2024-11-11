@@ -1,5 +1,4 @@
-// src/components/ProductCard.tsx
-import React from 'react';
+import React, { useState } from 'react';
 
 interface ProductProps {
   name: string;
@@ -10,11 +9,15 @@ interface ProductProps {
 }
 
 const cardStyle = {
-  border: '1px solid #f3f4f6',
+  border: '1px solid #e5e7eb',
   borderRadius: '1rem',
-  padding: '1rem',
-  textAlign: 'center' as const, // TypeScript에서 'center'를 명시적 타입으로 설정
-  width: '45%',
+  padding: '1.5rem',
+  textAlign: 'center' as const,
+  width: 'calc(50% - 1rem)',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  transition: 'transform 0.3s, box-shadow 0.3s',
+  cursor: 'pointer',
+  position: 'relative' as const,
 };
 
 const ProductCard: React.FC<ProductProps> = ({
@@ -23,35 +26,103 @@ const ProductCard: React.FC<ProductProps> = ({
   price,
   originalPrice,
   imageUrl,
-}) => (
-  <div style={cardStyle}>
-    <img
-      src={imageUrl}
-      alt={name}
-      style={{ width: '100px', height: '100px' }}
-    />
-    <h3>
-      {name}
-      {weight}
-    </h3>
-    <p style={{ color: '#4f46e5', fontWeight: 'bold' }}>₩{price}</p>
-    <p style={{ textDecoration: 'line-through', color: '#9ca3af' }}>
-      ₩{originalPrice}
-    </p>
-    <button
-      style={{
-        marginTop: '0.5rem',
-        padding: '0.5rem',
-        fontSize: '1rem',
-        backgroundColor: '#f3f4f6',
-        borderRadius: '50%',
-        border: '1px solid #4f46e5',
-        cursor: 'pointer',
+}) => {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
+
+  return (
+    <div
+      style={cardStyle}
+      onMouseOver={(e) => {
+        (e.currentTarget as HTMLDivElement).style.cssText +=
+          'transform: scale(1.05); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);';
+      }}
+      onMouseOut={(e) => {
+        (e.currentTarget as HTMLDivElement).style.cssText +=
+          'transform: scale(1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);';
       }}
     >
-      +
-    </button>
-  </div>
-);
+      <button
+        onClick={toggleFavorite}
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '0.5rem',
+          backgroundColor: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        <img
+          src={
+            !isFavorite
+              ? require('../icon/no_click_heart.png')
+              : require('../icon/clicked_heart.png')
+          }
+          alt={!isFavorite ? '찜하지 않은 상태' : '찜한 상태'}
+          style={{ width: '24px', height: '24px' }}
+        />
+      </button>
+      <img
+        src={imageUrl}
+        alt={name}
+        style={{
+          width: '100px',
+          height: '100px',
+          borderRadius: '0.5rem',
+          objectFit: 'cover',
+        }}
+      />
+      <h3 style={{ margin: '0.5rem 0', fontSize: '1.1rem', color: '#1f2937' }}>
+        {name}
+      </h3>
+      <p style={{ color: '#6b7280', marginBottom: '0.25rem' }}>{weight}</p>
+      <p
+        style={{
+          color: '#4f46e5',
+          fontWeight: 'bold',
+          fontSize: '1.25rem',
+          margin: '0.25rem 0',
+        }}
+      >
+        ₩{price}
+      </p>
+      <p
+        style={{
+          textDecoration: 'line-through',
+          color: '#9ca3af',
+          fontSize: '0.875rem',
+          margin: '0.25rem 0',
+        }}
+      >
+        ₩{originalPrice}
+      </p>
+      <button
+        style={{
+          marginTop: '0.75rem',
+          padding: '0.75rem 1.5rem',
+          fontSize: '0.875rem',
+          color: 'white',
+          backgroundColor: '#4f46e5',
+          border: 'none',
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          transition: 'background-color 0.3s',
+        }}
+        onMouseOver={(e) => {
+          (e.target as HTMLButtonElement).style.backgroundColor = '#4338ca';
+        }}
+        onMouseOut={(e) => {
+          (e.target as HTMLButtonElement).style.backgroundColor = '#4f46e5';
+        }}
+      >
+        장바구니에 추가
+      </button>
+    </div>
+  );
+};
 
 export default ProductCard;

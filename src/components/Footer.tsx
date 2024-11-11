@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
   };
 
   const handleHomeClick = () => {
-    navigate('/'); // 홈 화면으로 이동
+    navigate('/'); // 메인 화면으로 이동
   };
 
   const handleFavoriteClick = () => {
@@ -86,10 +86,10 @@ const Footer: React.FC = () => {
       >
         <img
           src={homeIcon}
-          alt="홈 아이콘"
+          alt="메인 화면 아이콘"
           style={{ width: '40px', height: '40px' }}
         />
-        <p style={BottomStyle}>홈</p>
+        <p style={BottomStyle}>메인 화면</p>
       </div>
       <div
         style={{

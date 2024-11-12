@@ -1,11 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-const smartSearchIcon = require('../icon/smartsearch_icon.png');
-const homeIcon = require('../icon/home_icon.png');
-const todaySpecialIcon = require('../icon/todayspecial_icon.png');
-const favoriteIcon = require('../icon/favorite_icon.png');
+import { ReactComponent as Home } from '../icon/house-regular.svg';
+import { ReactComponent as Heart } from '../icon/heart-regular.svg';
+import { ReactComponent as Tag } from '../icon/tag-regular.svg';
+import { ReactComponent as SmartSearch } from '../icon/chatbot-regular.svg';
 
-const Footer: React.FC = () => {
+const Footer: React.FC = (
+  currentPage
+) => {
+  if (currentPage == "Home") {
+  }
   const navigate = useNavigate();
 
   const handleSmartSearchClick = () => {
@@ -50,11 +54,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleFavoriteClick}
       >
-        <img
-          src={favoriteIcon}
-          alt="관심상품 아이콘"
-          style={{ width: '50px', height: '40px' }}
-        />
+        <Heart width="40" height="40" />
         <p style={BottomStyle}>관심상품</p>
       </div>
       <div
@@ -67,11 +67,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleSmartSearchClick}
       >
-        <img
-          src={smartSearchIcon}
-          alt="스마트 검색 아이콘"
-          style={{ width: '50px', height: '40px' }}
-        />
+        <SmartSearch width="40" height="40" />
         <p style={BottomStyle}>스마트 검색</p>
       </div>
       <div
@@ -84,11 +80,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleHomeClick}
       >
-        <img
-          src={homeIcon}
-          alt="메인 화면 아이콘"
-          style={{ width: '40px', height: '40px' }}
-        />
+      <Home width="40" height="40"/>
         <p style={BottomStyle}>메인 화면</p>
       </div>
       <div
@@ -101,11 +93,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleTodaySpecialClick}
       >
-        <img
-          src={todaySpecialIcon}
-          alt="오늘의 특가 아이콘"
-          style={{ width: '30px', height: '40px' }}
-        />
+        <Tag width="40" height="40" />
         <p style={BottomStyle}>오늘의 특가</p>
       </div>
     </footer>

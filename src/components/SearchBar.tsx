@@ -24,14 +24,14 @@ const SearchBar: React.FC = () => {
   return (
     <div
       style={{
-        padding: '1.5rem',
+        padding: '1rem',
         backgroundColor: '#f0f4f8',
         borderRadius: '1rem',
       }}
     >
       <p
         style={{
-          fontSize: '1.25rem',
+          fontSize: '1.2rem',
           fontWeight: 'bold',
           color: '#333',
           marginBottom: '1rem',

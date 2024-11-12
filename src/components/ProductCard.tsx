@@ -76,7 +76,7 @@ const ProductCard: React.FC<ProductProps> = ({
           objectFit: 'cover',
         }}
       />
-      <h3 style={{ margin: '0.5rem 0', fontSize: '1.1rem', color: '#1f2937' }}>
+      <h3 style={{ margin: '0.5rem 0', fontSize: '0.9rem', color: '#1f2937' }}>
         {name}
       </h3>
       <p style={{ color: '#6b7280', marginBottom: '0.25rem' }}>{weight}</p>

@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
           alt="메인 화면 아이콘"
           style={{ width: '40px', height: '40px' }}
         />
-        <p style={BottomStyle}>메인 화면</p>
+        <p style={BottomStyle}>홈</p>
       </div>
       <div
         style={{

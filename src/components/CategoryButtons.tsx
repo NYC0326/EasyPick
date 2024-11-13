@@ -15,7 +15,9 @@ const categories = [
 const CategoryButtons: React.FC = () => (
   <div
     style={{
-      padding: '1.5rem',
+      padding: '0rem',
+      marginTop: '26px',
+      marginBottom: '0px',
     }}
   >
     <h3
@@ -41,7 +43,7 @@ const CategoryButtons: React.FC = () => (
           style={{
             padding: '0.75rem 1rem',
             fontSize: '0.875rem',
-            color: '#4f46e5',
+            color: '#03318C',
             backgroundColor: '#f3f4f6',
             border: 'none',
             borderRadius: '1rem',

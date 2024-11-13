@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 
 interface ProductProps {
+  manufacturer: string;
   name: string;
   weight: string;
   price: string;
   originalPrice: string;
   imageUrl: string;
+  purchaseLink: string;
 }
 
 const cardStyle = {
@@ -21,11 +23,13 @@ const cardStyle = {
 };
 
 const ProductCard: React.FC<ProductProps> = ({
+  manufacturer,
   name,
   weight,
   price,
   originalPrice,
   imageUrl,
+  purchaseLink,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -76,13 +80,45 @@ const ProductCard: React.FC<ProductProps> = ({
           objectFit: 'cover',
         }}
       />
-      <h3 style={{ margin: '0.5rem 0', fontSize: '0.9rem', color: '#1f2937' }}>
-        {name}
-      </h3>
-      <p style={{ color: '#6b7280', marginBottom: '0.25rem' }}>{weight}</p>
+      <div style={{ margin: '0.5rem 0' }}>
+        <p
+          style={{
+            fontSize: '0.8rem',
+            color: '#6b7280',
+            marginBottom: '0.2rem',
+          }}
+        >
+          {manufacturer}
+        </p>
+        <h3
+          style={{
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            color: '#1f2937',
+            margin: 0,
+            display: 'flex',
+            gap: '4px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >
+          {name}
+          <span
+            style={{
+              fontSize: '0.75rem',
+              color: '#6b7280',
+              fontWeight: 'normal',
+            }}
+          >
+            {weight}
+          </span>
+        </h3>
+      </div>
       <p
         style={{
-          color: '#4f46e5',
+          color: '#03318C',
           fontWeight: 'bold',
           fontSize: '1.25rem',
           margin: '0.25rem 0',
@@ -93,7 +129,7 @@ const ProductCard: React.FC<ProductProps> = ({
       <p
         style={{
           textDecoration: 'line-through',
-          color: '#9ca3af',
+          color: '#black',
           fontSize: '0.875rem',
           margin: '0.25rem 0',
         }}
@@ -102,16 +138,17 @@ const ProductCard: React.FC<ProductProps> = ({
       </p>
       <button
         style={{
-          marginTop: '0.75rem',
-          padding: '0.75rem 1.5rem',
+          marginTop: '0.5rem',
+          padding: '0.55rem 0.75rem',
           fontSize: '0.875rem',
           color: 'white',
-          backgroundColor: '#4f46e5',
+          backgroundColor: '#03318C',
           border: 'none',
           borderRadius: '0.5rem',
           cursor: 'pointer',
           transition: 'background-color 0.3s',
         }}
+        onClick={() => window.open(purchaseLink, '_blank')}
         onMouseOver={(e) => {
           (e.target as HTMLButtonElement).style.backgroundColor = '#4338ca';
         }}
@@ -119,7 +156,7 @@ const ProductCard: React.FC<ProductProps> = ({
           (e.target as HTMLButtonElement).style.backgroundColor = '#4f46e5';
         }}
       >
-        장바구니에 추가
+        구매하러 가기
       </button>
     </div>
   );

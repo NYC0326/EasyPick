@@ -1,14 +1,12 @@
 /* SmartSearch.css */
 .react-chatbot-kit-chat-container {
-  width: 100%;
-  height: 100%;
-  max-width: none; /* Remove this if there's a max-width constraint */
+  width: 100% !important;
 }
-
 .react-chatbot-kit-chat-bot-message-container {
   display: flex;
-  align-items: center; /* 아바타와 메시지를 수직으로 정렬 */
-  gap: 5px; /* 아바타와 메시지 사이의 간격 조절 */
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
 .chatbot-container {
@@ -17,14 +15,81 @@
 }
 
 .react-chatbot-kit-chat-bot-avatar-container {
-  margin-right: 5px !important; /* 불필요한 여백 제거 */
+  background-image: url('/src/icon/Easypick_chatbot_logo.png') !important;  /* 절대 경로 사용 */
+  background-size: 100% 100% !important;
+  background-position: center !important;
+  font-size: 0 !important;
+  border-radius: 50% !important;
+}
+
+.react-chatbot-kit-chat-bot-avatar-container::before {
+  content: none !important;
 }
 
 .react-chatbot-kit-chat-bubble {
-  margin-left: 5px; /* 메시지 버블의 왼쪽 여백 줄이기 */
-  padding: 5px 10px; /* 메시지 내부 여백 조절하기 */
+  margin-left: 5px;
+  padding: 10px 15px;
+  width: 100% !important;
+  min-width: 200px;
+  box-sizing: border-box;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  display: block !important;
 }
 
 .react-chatbot-kit-chat-bot-message {
-  margin-left: 0 !important; /* 불필요한 여백 제거 */
+  background-color: #DDE8FC !important; /* 연한 파란색으로 변경 */
+  border-radius: 20px;
+  margin-left: 0 !important;
+  max-width: 80% !important;
+  width: 280px !important;
+  white-space: pre-wrap !important;
+  line-height: 1.5 !important;
+  color: black;
+  /*font-weight: bold !important;*/
+}
+
+.react-chatbot-kit-chat-message {
+  font-size: 16px; /* 글자 크기 변경 */
+  color: #333; /* 글자 색 변경 */
+}
+
+.react-chatbot-kit-user-chat-message {
+  color: black;
+  padding: 5px 10px;
+  align-self: flex-end; 
+}
+
+.react-chatbot-kit-chat-container {
+  background-color: white !important;
+  height: 67vh !important;
+}
+
+.react-chatbot-kit-chat-message-container {
+  background-color: white !important;
+  padding: 0 17px 10px 17px;
+  height: calc(67vh - 100px) !important;
+}
+
+.react-chatbot-kit-chat-message-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.react-chatbot-kit-chat-message-container::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+}
+
+.react-chatbot-kit-chat-message-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 전송 버튼(화살표) 스타일링 */
+.react-chatbot-kit-chat-btn-send {
+  background-color: #729DF2 !important; 
+  border: none !important;
+}
+
+.react-chatbot-kit-chat-btn-send-icon {
+  fill: white !important; /* 화살표 아이콘 색상을 흰색으로 */
+  transform: scale(1.3) !important; /* 아이콘 크기를 1.3배로 키움 */
 }

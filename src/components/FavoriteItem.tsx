@@ -66,7 +66,7 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
             objectFit: 'cover',
           }}
         />
-        <a style={{ color: '#F8B91F', textAlign: 'center' }}> ★★★★★ </a>
+        <a style={{ color: '#F8B91F', textAlign: 'center' }}>★★★★★</a>
       </div>
 
       <div style={{ width: '75%' }}>

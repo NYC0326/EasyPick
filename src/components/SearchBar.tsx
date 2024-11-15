@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PopularSearchList from './PopularSearchList';
+import { useNavigate } from 'react-router-dom';
 
 const SearchBar: React.FC = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const getGreetingMessage = () => {
     const currentHour = new Date().getHours();
@@ -18,6 +20,7 @@ const SearchBar: React.FC = () => {
   };
 
   const handleSearch = () => {
+    navigate('/search-result');
     if (searchTerm.trim()) {
       alert(`"${searchTerm}" 검색 결과는 준비 중입니다.`);
     }

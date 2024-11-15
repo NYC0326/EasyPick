@@ -2,7 +2,7 @@
 import React from 'react';
 import Footer from './Footer';
 import Header from './Header';
-import FavoriteItem from './FavoriteItem';
+import ItemTemplate from './ItemTemplate';
 
 const length = 2;
 
@@ -15,7 +15,7 @@ const Favorite: React.FC = () => (
   <hr color="gray"></hr>
   
   {Array.from({ length }).map((_, index) => (
-  <FavoriteItem
+  <ItemTemplate
     name="안원당 갈비탕"
     weight="700g"
     imageUrl="https://img.danawa.com/prod_img/500000/876/270/img/68270876_1.jpg?shrink=130:130&_v=20241005073111"

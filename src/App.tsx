@@ -12,6 +12,7 @@ import TodaySpecial from './components/TodaySpecial';
 import 'react-chatbot-kit/build/main.css';
 import './styles/chatbot.css';
 import 'remixicon/fonts/remixicon.css';
+import SearchResult from 'components/SearchResult';
 
 const App: React.FC = () => {
   return (
@@ -37,6 +38,7 @@ const App: React.FC = () => {
             }
           />
           <Route path="/favorite" element={<Favorite />} />
+          <Route path="/search-result" element={<SearchResult />} />
           <Route path="/smart-search" element={<SmartSearch />} />
           <Route path="/today-special" element={<TodaySpecial />} />
         </Routes>

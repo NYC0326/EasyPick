@@ -95,6 +95,7 @@ const Footer: React.FC = () => {
       >
       <HomeIcon width="40" height="40"/>
         <p style={BottomStyle}>메인 화면</p>
+
       </div>
       <div
         style={{

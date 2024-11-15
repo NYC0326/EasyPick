@@ -7,7 +7,8 @@ import CategoryButtons from './components/CategoryButtons';
 import E_Pick from './components/E_Pick';
 import Footer from './components/Footer';
 import SmartSearch from './components/SmartSearch';
-import Favorite from 'components/Favorite';
+import Favorite from './components/Favorite';
+import TodaySpecial from './components/TodaySpecial';
 import 'react-chatbot-kit/build/main.css';
 import './styles/chatbot.css';
 import 'remixicon/fonts/remixicon.css';
@@ -37,6 +38,7 @@ const App: React.FC = () => {
           />
           <Route path="/favorite" element={<Favorite />} />
           <Route path="/smart-search" element={<SmartSearch />} />
+          <Route path="/today-special" element={<TodaySpecial />} />
         </Routes>
       </div>
     </Router>

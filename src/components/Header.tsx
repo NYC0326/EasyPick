@@ -1,7 +1,7 @@
 // src/components/Header.tsx
 import React from 'react';
 
-const EasypickLogo = require('../icon/Easypick_logo.png'); // Using require to import the logo
+const EasypickLogo = require('../icon/Easypick_logo.png');
 
 const Header: React.FC = () => (
   <header style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
@@ -11,9 +11,9 @@ const Header: React.FC = () => (
       ≡
     </div>
     <img
-      src={EasypickLogo} // Using require to set the src
+      src={EasypickLogo}
       alt="EasyPICK Logo"
-      style={{ width: '150px', height: 'auto' }} // Adjust size as needed
+      style={{ width: '150px', height: 'auto' }}
     />
   </header>
 );

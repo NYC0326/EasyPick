@@ -4,9 +4,8 @@ import { useState } from "react";
 interface FavoriteItemProp {
     name: string;
     weight: string;
-    price: string;
-    originalPrice: string;
     imageUrl: string;
+    purchaseLink: string;
   }
 
 const cardStyle = {
@@ -23,9 +22,8 @@ const cardStyle = {
 const FavoriteItem: React.FC<FavoriteItemProp> = ({
     name,
     weight,
-    price,
-    originalPrice,
     imageUrl,
+    purchaseLink,
 }) => {
     const [isFavorite, setIsFavorite] = useState(true);
 
@@ -56,7 +54,7 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
       />
     </button>
 
-    <div style={{display: "inline", width: "25%", textAlign: "center" }}>
+    <div style={{display: "inline", width: "25%", textAlign: "center" }} onClick={() => window.open(purchaseLink, '_blank')}>
         <img
         src={imageUrl}
         alt={name}
@@ -71,7 +69,7 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
     </div>
 
     <div style={{ width: "75%"}}>
-      <h3 style={{ margin: '0.5rem 0', fontSize: '1.2rem', color: '#1f2937', textAlign: 'left'}}>
+      <h3 style={{ margin: '0.5rem 0', fontSize: '1.2rem', color: '#1f2937', textAlign: 'left'}} onClick={() => window.open(purchaseLink, '_blank')}>
         {name} {weight}
       </h3>
       <div style={{display: "flex", alignItems: "center"}}>

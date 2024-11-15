@@ -16,7 +16,7 @@ const config = {
       {
         widget: 'foodOptions',
         withAvatar: true,
-      }
+      },
     ),
   ],
   widgets: [

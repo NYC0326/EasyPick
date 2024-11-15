@@ -27,7 +27,7 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
     originalPrice,
     imageUrl,
 }) => {
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(true);
 
     const toggleFavorite = () => {
         setIsFavorite(!isFavorite);

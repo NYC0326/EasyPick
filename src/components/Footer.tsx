@@ -1,14 +1,15 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ReactComponent as HomeRegular } from '../icon/house-regular.svg';
-import { ReactComponent as HomeSolid } from '../icon/house-solid.svg';
-import { ReactComponent as HeartRegular } from '../icon/heart-regular.svg';
-import { ReactComponent as HeartSolid } from '../icon/heart-solid.svg';
-import { ReactComponent as TagRegular } from '../icon/tag-regular.svg';
-import { ReactComponent as TagSolid } from '../icon/tag-solid.svg';
-import { ReactComponent as SmartSearchRegular } from '../icon/chatbot-regular.svg';
-import { ReactComponent as SmartSearchSolid } from '../icon/chatbot-solid.svg';
+
+const HomeRegular = require('../icon/house-regular.png');
+const HomeSolid = require('../icon/house-solid.png');
+const HeartRegular = require('../icon/heart-regular.png');
+const HeartSolid = require('../icon/heart-solid.png');
+const TagRegular = require('../icon/tag-regular.png');
+const TagSolid = require('../icon/tag-solid.png');
+const SmartSearchRegular = require('../icon/chatbot-regular.png');
+const SmartSearchSolid = require('../icon/chatbot-solid.png');
 
 const Footer: React.FC = () => {
   const [HomeIcon, setHomeIcon] = useState(HomeRegular);
@@ -55,6 +56,7 @@ const Footer: React.FC = () => {
         justifyContent: 'space-around',
         padding: '1rem',
         borderTop: '1px solid #e5e7eb',
+        position: 'relative',
       }}
     >
       <div
@@ -67,7 +69,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleFavoriteClick}
       >
-        <HeartIcon width="40" height="40" />
+        <img src={HeartIcon} alt="Heart" width="40" height="40" />
         <p style={BottomStyle}>관심상품</p>
       </div>
       <div
@@ -80,7 +82,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleSmartSearchClick}
       >
-        <SmartSearchIcon width="40" height="40" />
+        <img src={SmartSearchIcon} alt="SmartSearch" width="40" height="40" />
         <p style={BottomStyle}>스마트 검색</p>
       </div>
       <div
@@ -93,7 +95,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleHomeClick}
       >
-      <HomeIcon width="40" height="40"/>
+        <img src={HomeIcon} alt="Home" width="40" height="40" />
         <p style={BottomStyle}>메인 화면</p>
 
       </div>
@@ -107,7 +109,7 @@ const Footer: React.FC = () => {
         }}
         onClick={handleTodaySpecialClick}
       >
-        <TagIcon width="40" height="40" />
+        <img src={TagIcon} alt="Tag" width="40" height="40" />
         <p style={BottomStyle}>오늘의 특가</p>
       </div>
     </footer>

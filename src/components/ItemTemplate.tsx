@@ -1,12 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 
-interface FavoriteItemProp {
+interface ItemProp {
   name: string;
   weight: string;
-  price: string;
-  originalPrice: string;
   imageUrl: string;
+  purchaseLink: string;
 }
 
 const cardStyle = {
@@ -19,15 +18,13 @@ const cardStyle = {
   display: 'flex',
 };
 
-const FavoriteItem: React.FC<FavoriteItemProp> = ({
+const ItemTemplate: React.FC<ItemProp> = ({
   name,
   weight,
-  price,
-  originalPrice,
   imageUrl,
+  purchaseLink,
 }) => {
   const [isFavorite, setIsFavorite] = useState(true);
-
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
   };
@@ -55,7 +52,10 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
         />
       </button>
 
-      <div style={{ display: 'inline', width: '25%', textAlign: 'center' }}>
+      <div
+        style={{ display: 'inline', width: '25%', textAlign: 'center' }}
+        onClick={() => window.open(purchaseLink, '_blank')}
+      >
         <img
           src={imageUrl}
           alt={name}
@@ -66,7 +66,7 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
             objectFit: 'cover',
           }}
         />
-        <a style={{ color: '#F8B91F', textAlign: 'center' }}>★★★★★</a>
+        <a style={{ color: '#F8B91F', textAlign: 'center' }}> ★★★★★ </a>
       </div>
 
       <div style={{ width: '75%' }}>
@@ -77,6 +77,7 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
             color: '#1f2937',
             textAlign: 'left',
           }}
+          onClick={() => window.open(purchaseLink, '_blank')}
         >
           {name} {weight}
         </h3>
@@ -84,7 +85,7 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
           <p style={{ color: '#707070', width: '10%', textAlign: 'left' }}>
             1개
           </p>
-          <p style={{ width: '60%', textAlign: 'left' }}>100g당 775원</p>
+          <p style={{ width: '60%', textAlign: 'left' }}> 100g당 775원 </p>
           <p
             style={{
               color: '#1F64BF',
@@ -101,4 +102,4 @@ const FavoriteItem: React.FC<FavoriteItemProp> = ({
   );
 };
 
-export default FavoriteItem;
+export default ItemTemplate;

@@ -3,15 +3,24 @@ import React from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import ItemTemplate from './ItemTemplate';
+import SearchHeader from './SearchHeader';
 
-const length = 2;
+const length = 3;
+const searchIcon = require('../icon/search-icon.png');
 
 const SearchResult: React.FC = () => (
   <div>
-    <Header /> { }
-    <hr color="gray"></hr>
-      <a>전체 상품</a> 
-      <a style={{color: '#1F64BF'}}> 총 {length}개 </a>
+    <Header /> 
+    <SearchHeader />
+    <div style={{display: 'flex'}}>
+      <a style={{width: '15%'}}>전체 상품</a> 
+      <a style={{color: '#1F64BF', width: '60%'}}> 총 {length}개 </a>
+      <select>
+        <option value="popular">인기순</option>
+        <option value="recent">최신순</option>
+        <option value="lowprice">낮은 가격순</option>
+      </select>
+    </div>
     <hr color="gray"></hr>
     
     {Array.from({ length }).map((_, index) => (

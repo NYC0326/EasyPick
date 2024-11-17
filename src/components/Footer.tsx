@@ -60,7 +60,15 @@ const Footer: React.FC = () => {
         justifyContent: 'space-around',
         padding: '1rem',
         borderTop: '1px solid #e5e7eb',
-        position: 'relative',
+        position: 'fixed',
+        bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '468px',
+        backgroundColor: 'white',
+        zIndex: 1000,
+        height: '80px',
+        maxWidth: '600px',
       }}
     >
       <div

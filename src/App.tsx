@@ -1,18 +1,14 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import SearchBar from './components/SearchBar';
-import CategoryButtons from './components/CategoryButtons';
-import E_Pick from './components/E_Pick';
-import Footer from './components/Footer';
+import Main from './components/Main';
 import SmartSearch from './components/SmartSearch';
 import Favorite from './components/Favorite';
 import TodaySpecial from './components/TodaySpecial';
+import SearchResult from './components/SearchResult';
 import 'react-chatbot-kit/build/main.css';
 import './styles/chatbot.css';
 import 'remixicon/fonts/remixicon.css';
-import SearchResult from 'components/SearchResult';
 
 const App: React.FC = () => {
   return (
@@ -25,18 +21,7 @@ const App: React.FC = () => {
         }}
       >
         <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Header />
-                <SearchBar />
-                <CategoryButtons />
-                <E_Pick />
-                <Footer />
-              </>
-            }
-          />
+          <Route path="/" element={<Main />} />
           <Route path="/favorite" element={<Favorite />} />
           <Route path="/search-result" element={<SearchResult />} />
           <Route path="/smart-search" element={<SmartSearch />} />

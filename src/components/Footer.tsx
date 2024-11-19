@@ -20,11 +20,15 @@ const Footer: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    setHomeIcon(location.pathname === "/" ? HomeSolid : HomeRegular);
-    setHeartIcon(location.pathname === "/favorite" ? HeartSolid : HeartRegular);
-    setTagIcon(location.pathname === "/today-special" ? TagSolid : TagRegular);
-    setSmartSearchIcon(location.pathname === "/smart-search" ? SmartSearchSolid : SmartSearchRegular);
-  }, [location.pathname]);  // 경로가 변경될 때마다 useEffect 실행
+    setHomeIcon(location.pathname === '/' ? HomeSolid : HomeRegular);
+    setHeartIcon(location.pathname === '/favorite' ? HeartSolid : HeartRegular);
+    setTagIcon(location.pathname === '/today-special' ? TagSolid : TagRegular);
+    setSmartSearchIcon(
+      location.pathname === '/smart-search'
+        ? SmartSearchSolid
+        : SmartSearchRegular,
+    );
+  }, [location.pathname]); // 경로가 변경될 때마다 useEffect 실행
 
   const handleSmartSearchClick = () => {
     navigate('/smart-search'); // 스마트 검색 화면으로 이동
@@ -56,7 +60,15 @@ const Footer: React.FC = () => {
         justifyContent: 'space-around',
         padding: '1rem',
         borderTop: '1px solid #e5e7eb',
-        position: 'relative',
+        position: 'fixed',
+        bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '468px',
+        backgroundColor: 'white',
+        zIndex: 1000,
+        height: '80px',
+        maxWidth: '600px',
       }}
     >
       <div
@@ -97,7 +109,6 @@ const Footer: React.FC = () => {
       >
         <img src={HomeIcon} alt="Home" width="40" height="40" />
         <p style={BottomStyle}>메인 화면</p>
-
       </div>
       <div
         style={{

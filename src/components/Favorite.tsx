@@ -22,21 +22,6 @@ const Favorite: React.FC = () => (
         <a style={{ color: '#1F64BF' }}> 총 {length}개 </a>
       </div>
       <hr color="gray" />
-  <div
-    style={{
-      minHeight: '100vh', // 전체 높이를 최소한 화면 높이만큼
-      display: 'flex',
-      flexDirection: 'column',
-    }}
-  >
-    <div style={{ flex: '1 0 auto' }}>
-      <Header />
-      <hr color="gray" />
-      <div style={{ padding: '0 20px' }}>
-        <a>전체 상품</a>
-        <a style={{ color: '#1F64BF' }}> 총 {length}개 </a>
-      </div>
-      <hr color="gray" />
 
       {Array.from({ length }).map((_, index) => (
         <ItemTemplate

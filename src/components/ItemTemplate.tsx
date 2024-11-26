@@ -78,12 +78,13 @@ const ItemTemplate: React.FC<ItemProp> = ({
               fontSize: '1.2rem',
               color: '#1f2937',
               textAlign: 'left',
+              height: '5%',
             }}
             onClick={() => window.open(purchaseLink, '_blank')}
           >
             {name} {weight}
           </h3>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', height: '30%' }}>
             <p style={{ color: '#707070', width: '10%', textAlign: 'left' }}>
               1개
             </p>
@@ -92,11 +93,38 @@ const ItemTemplate: React.FC<ItemProp> = ({
               style={{
                 color: '#1F64BF',
                 width: '30%',
+                height: '5%',
                 fontSize: '1.2rem',
                 textAlign: 'right',
               }}
             >
               <b>8,140원</b>
+            </p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'right' }}>
+            <p style={{ width: '70%' }}></p>
+            <p
+              style={{
+                textAlign: 'center',
+                border: '1px solid',
+                borderColor: 'gray',
+                borderRadius: '7px',
+                width: '11%',
+              }}
+            >
+              BUY
+            </p>
+            <p style={{ width: '1%' }}></p>
+            <p
+              style={{
+                textAlign: 'center',
+                border: '1px solid',
+                borderColor: 'gray',
+                borderRadius: '7px',
+                width: '18%',
+              }}
+            >
+              리뷰 보기
             </p>
           </div>
         </div>

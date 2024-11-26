@@ -14,15 +14,6 @@ const SearchHeader: React.FC = () => {
             <a>노브랜드</a>
           </td>
         </tr>
-        <tr>
-          <td id="category">총 수량</td>
-          <td id="brand">
-            <a>~10개</a>
-            <a>~20개</a>
-            <a>~30개</a>
-            <a>30개 이상</a>
-          </td>
-        </tr>
         <tr style={{ borderBottom: '1px solid #03318C' }}>
           <td id="category">가격대별</td>
           <td id="brand">

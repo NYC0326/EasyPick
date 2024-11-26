@@ -36,9 +36,9 @@ const SearchResult: React.FC = () => (
         <a style={{ width: '15%', whiteSpace: 'nowrap' }}>전체 상품</a>
         <a style={{ color: '#1F64BF', width: '60%' }}> 총 {length}개 </a>
         <select style={{ marginLeft: 'auto' }}>
-          <option value="popular">인기순</option>
-          <option value="recent">최신순</option>
-          <option value="lowprice">낮은 가격순</option>
+          <option value="popular">최다 리뷰순</option>
+          <option value="recent">평점 순</option>
+          <option value="lowprice">최저가순</option>
         </select>
       </div>
       <hr color="gray" />

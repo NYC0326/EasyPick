@@ -8,6 +8,7 @@ import {
   FiClock,
   FiMoreHorizontal,
 } from 'react-icons/fi';
+import ReviewModal from './ReviewModal';
 const ChatpickIcon = require('../../icon/Chatpick.png');
 
 const api = axios.create({
@@ -47,6 +48,9 @@ const TodaysDeal: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'pros' | 'cons'>('pros');
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [recommendation, setRecommendation] = useState<string>('');
+  const [showReviews, setShowReviews] = useState<boolean>(false);
+  const [originalReviews, setOriginalReviews] = useState<string[]>([]);
 
   // 아이콘 매핑 함수
   const getIcon = (iconName: string): JSX.Element => {
@@ -66,47 +70,42 @@ const TodaysDeal: React.FC = () => {
       try {
         // 1. 오늘의 딜 데이터 가져오기
         const dealResponse = await api.get('/api/products/todays-deal');
-        console.log('Deal Response:', dealResponse.data); // 딜 데이터 확인
+        console.log('Deal Response:', dealResponse.data);
         const dealData = dealResponse.data;
         setDeal(dealData);
 
         // 2. 리뷰 데이터 가져오기
-        console.log('Fetching reviews for product ID:', dealData.productID); // productID 확인
+        console.log('Fetching reviews for product ID:', dealData.productID);
         const reviewResponse = await api.get(
           `/api/products/${dealData.productID}/reviews`,
         );
-        console.log('Raw Review Response:', reviewResponse.data); // 백엔드에서 받은 원본 데이터 확인
-
         const reviewsData = reviewResponse.data;
-        console.log('Pros Reviews:', reviewsData.pros); // pros 데이터 확인
-        console.log('Cons Reviews:', reviewsData.cons); // cons 데이터 확인
-
         // 리뷰 데이터 변환
         const formattedReviews: ReviewData = {
-          pros: reviewsData.pros.map((review: any) => {
-            console.log('Processing pro review:', review); // 각 리뷰 처리 과정 확인
-            return {
-              icon: getIcon(review.icon_name),
-              keyword: review.category_name,
-              summary: review.summary,
-              details: review.details,
-            };
-          }),
-          cons: reviewsData.cons.map((review: any) => {
-            console.log('Processing con review:', review); // 각 리뷰 처리 과정 확인
-            return {
-              icon: getIcon(review.icon_name),
-              keyword: review.category_name,
-              summary: review.summary,
-              details: review.details,
-            };
-          }),
+          pros: reviewsData.pros.map((review: any) => ({
+            icon: getIcon(review.icon_name),
+            keyword: review.category_name,
+            summary: review.summary,
+            details: review.details,
+          })),
+          cons: reviewsData.cons.map((review: any) => ({
+            icon: getIcon(review.icon_name),
+            keyword: review.category_name,
+            summary: review.summary,
+            details: review.details,
+          })),
         };
 
-        console.log('Formatted Reviews:', formattedReviews); // 최종 변환된 데이터 확인
         setReviewData(formattedReviews);
+
+        // 3. 추천 메시지 가져오기
+        const recommendationResponse = await api.get(
+          `/api/products/${dealData.productID}/recommendation`,
+        );
+        setRecommendation(recommendationResponse.data.recommendation);
+        setOriginalReviews(recommendationResponse.data.productDetails.reviews);
       } catch (err) {
-        console.error('Error details:', err); // 에러 상세 정보 확인
+        console.error('Error details:', err);
         setError('Failed to load data');
       } finally {
         setLoading(false);
@@ -251,7 +250,7 @@ const TodaysDeal: React.FC = () => {
         </div>
       </div>
 
-      {/* 리뷰 섹션 */}
+      {/* 구매자 리뷰 분석 섹션 */}
       <div
         style={{
           marginTop: '16px',
@@ -270,7 +269,7 @@ const TodaysDeal: React.FC = () => {
             textAlign: 'center',
           }}
         >
-          구매자 리뷰 분석
+          구매자 리뷰 분석 from ChatGPT
         </h4>
 
         {/* 탭 버튼 */}
@@ -424,10 +423,79 @@ const TodaysDeal: React.FC = () => {
         </div>
       </div>
 
+      {/* 추천 메시지 섹션 */}
+      {recommendation && (
+        <div
+          style={{
+            marginTop: '16px',
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
+          }}
+        >
+          <h4
+            style={{
+              margin: '0 0 5px 0',
+              color: '#1f2937',
+              fontSize: '15px',
+              fontWeight: '600',
+              textAlign: 'center',
+            }}
+          >
+            AI의 추천 메시지
+          </h4>
+          <div
+            style={{
+              fontSize: '14px',
+              lineHeight: '1.6',
+              color: '#4b5563',
+              padding: '8px',
+              backgroundColor: '#f9fafb',
+              borderRadius: '8px',
+              whiteSpace: 'pre-line',
+            }}
+            dangerouslySetInnerHTML={{ __html: recommendation }}
+          />
+          <button
+            onClick={() => setShowReviews(true)}
+            style={{
+              display: 'block',
+              margin: '8px auto 0',
+              padding: '6px 12px',
+              backgroundColor: '#f3f4f6',
+              border: 'none',
+              borderRadius: '6px',
+              color: '#4b5563',
+              fontSize: '13px',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#e5e7eb';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#f3f4f6';
+            }}
+          >
+            💬 실제 리뷰 보기
+          </button>
+        </div>
+      )}
+
+      {/* 리뷰 모달 컴포넌트 */}
+      <ReviewModal
+        isOpen={showReviews}
+        onClose={() => setShowReviews(false)}
+        reviews={originalReviews}
+      />
+
+      {/* 상품 보러가기 버튼 */}
       <div
         style={{
           textAlign: 'right',
           paddingRight: '50px',
+          marginTop: '16px',
         }}
       >
         <a
@@ -437,7 +505,6 @@ const TodaysDeal: React.FC = () => {
           style={{
             display: 'inline-block',
             width: '120px',
-            marginTop: '2px',
             padding: '3px',
             backgroundColor: '#2563eb',
             color: 'white',

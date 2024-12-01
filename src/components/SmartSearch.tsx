@@ -9,7 +9,6 @@ import Header from './Header';
 import Footer from './Footer';
 import '../styles/SmartSearch.css';
 
-const SearchIcon = require('../icon/smartsearch_icon.png');
 const SmartSearch: React.FC = () => {
   return (
     <div

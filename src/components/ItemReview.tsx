@@ -15,7 +15,7 @@ const ItemReview: React.FC<ItemReviewInterface> = ({
   if (!visible) return null;
 
   return (
-    <div>
+    <div style={{ marginTop: '1px' }}>
       <p>리뷰 요약 1</p>
       <p>리뷰 요약 2</p>
       <p>리뷰 요약 3</p>

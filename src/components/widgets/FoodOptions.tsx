@@ -30,44 +30,24 @@ const buttonStyle: CSSProperties = {
 const FoodOptions: React.FC<{ actionProvider: any }> = ({ actionProvider }) => {
   const allOptions: FoodOption[] = [
     {
-      text: '얼큰한 \n 국물요리',
-      handler: () => actionProvider.handleKoreanFood(),
+      text: '빠른배송',
+      handler: () => actionProvider.handleDelivery(),
     },
     {
-      text: '저녁식사',
-      handler: () => actionProvider.handleChineseFood(),
+      text: '가성비',
+      handler: () => actionProvider.handleAffordable(),
     },
     {
-      text: '든든한 한끼',
-      handler: () => actionProvider.handleJapaneseFood(),
+      text: '손쉬운 조리',
+      handler: () => actionProvider.handleEasyCooking(),
     },
     {
-      text: '이번주 \n핫한 제품',
-      handler: () => actionProvider.handleWesternFood(),
+      text: '리뷰 많은',
+      handler: () => actionProvider.handlePopular(),
     },
     {
-      text: '담백한 음식',
-      handler: () => actionProvider.handleKoreanFood(),
-    },
-    {
-      text: '간단한 \n 한끼',
-      handler: () => actionProvider.handleChineseFood(),
-    },
-    {
-      text: '집들이 \n 메뉴',
-      handler: () => actionProvider.handleJapaneseFood(),
-    },
-    {
-      text: '술안주 \n 추천',
-      handler: () => actionProvider.handleWesternFood(),
-    },
-    {
-      text: '점심식사',
-      handler: () => actionProvider.handleKoreanFood(),
-    },
-    {
-      text: '건강식 \n 추천',
-      handler: () => actionProvider.handleChineseFood(),
+      text: '매콤한',
+      handler: () => actionProvider.handleSpicy(),
     },
   ];
 

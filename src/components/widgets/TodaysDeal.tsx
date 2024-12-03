@@ -24,9 +24,20 @@ interface DealType {
   discountRate: number;
   imageUrl: string;
   productLink: string;
+  productID: string;
 }
 
-const TodaysDeal: React.FC = () => {
+interface Props {
+  initialData?: DealType;
+  skipInitialFetch?: boolean;
+  customMessage?: string;
+}
+
+const TodaysDeal: React.FC<Props> = ({
+  initialData,
+  skipInitialFetch = false,
+  customMessage = '오늘 할인율이 가장 큰 상품을 추천해줄게요',
+}) => {
   interface ReviewCategory {
     icon: JSX.Element;
     keyword: string;
@@ -39,7 +50,7 @@ const TodaysDeal: React.FC = () => {
     cons: ReviewCategory[];
   }
 
-  const [deal, setDeal] = useState<DealType | null>(null);
+  const [deal, setDeal] = useState<DealType | null>(initialData || null);
   const [reviewData, setReviewData] = useState<ReviewData>({
     pros: [],
     cons: [],
@@ -68,42 +79,51 @@ const TodaysDeal: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. 오늘의 딜 데이터 가져오기
-        const dealResponse = await api.get('/api/products/todays-deal');
-        console.log('Deal Response:', dealResponse.data);
-        const dealData = dealResponse.data;
-        setDeal(dealData);
+        let currentDeal;
+        if (initialData) {
+          setDeal(initialData);
+          currentDeal = initialData;
+        } else if (!skipInitialFetch) {
+          const dealResponse = await api.get('/api/products/todays-deal');
+          console.log('Deal Response:', dealResponse.data);
+          const dealData = dealResponse.data;
+          setDeal(dealData);
+          currentDeal = dealData;
+        }
 
-        // 2. 리뷰 데이터 가져오기
-        console.log('Fetching reviews for product ID:', dealData.productID);
-        const reviewResponse = await api.get(
-          `/api/products/${dealData.productID}/reviews`,
-        );
-        const reviewsData = reviewResponse.data;
-        // 리뷰 데이터 변환
-        const formattedReviews: ReviewData = {
-          pros: reviewsData.pros.map((review: any) => ({
-            icon: getIcon(review.icon_name),
-            keyword: review.category_name,
-            summary: review.summary,
-            details: review.details,
-          })),
-          cons: reviewsData.cons.map((review: any) => ({
-            icon: getIcon(review.icon_name),
-            keyword: review.category_name,
-            summary: review.summary,
-            details: review.details,
-          })),
-        };
+        // 리뷰 데이터 가져오기
+        if (currentDeal) {
+          const productId = currentDeal.productID;
+          console.log('Fetching reviews for product ID:', productId);
+          const reviewResponse = await api.get(
+            `/api/products/${productId}/reviews`,
+          );
+          const reviewsData = reviewResponse.data;
+          const formattedReviews: ReviewData = {
+            pros: reviewsData.pros.map((review: any) => ({
+              icon: getIcon(review.icon_name),
+              keyword: review.category_name,
+              summary: review.summary,
+              details: review.details,
+            })),
+            cons: reviewsData.cons.map((review: any) => ({
+              icon: getIcon(review.icon_name),
+              keyword: review.category_name,
+              summary: review.summary,
+              details: review.details,
+            })),
+          };
+          setReviewData(formattedReviews);
 
-        setReviewData(formattedReviews);
-
-        // 3. 추천 메시지 가져오기
-        const recommendationResponse = await api.get(
-          `/api/products/${dealData.productID}/recommendation`,
-        );
-        setRecommendation(recommendationResponse.data.recommendation);
-        setOriginalReviews(recommendationResponse.data.productDetails.reviews);
+          // 추천 메시지 가져오기
+          const recommendationResponse = await api.get(
+            `/api/products/${productId}/recommendation`,
+          );
+          setRecommendation(recommendationResponse.data.recommendation);
+          setOriginalReviews(
+            recommendationResponse.data.productDetails.reviews,
+          );
+        }
       } catch (err) {
         console.error('Error details:', err);
         setError('Failed to load data');
@@ -113,7 +133,7 @@ const TodaysDeal: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [initialData, skipInitialFetch]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -128,7 +148,7 @@ const TodaysDeal: React.FC = () => {
           fontSize: '14px',
         }}
       >
-        오늘 할인율이 가장 큰 상품을 추천해줄게요
+        {customMessage}
       </div>
 
       <div
@@ -269,7 +289,7 @@ const TodaysDeal: React.FC = () => {
             textAlign: 'center',
           }}
         >
-          구매자 리뷰 분석 from ChatGPT
+          구매자 리뷰 분석 from GPT-4o-mini
         </h4>
 
         {/* 탭 버튼 */}

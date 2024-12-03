@@ -11,7 +11,7 @@ const config = {
     }),
     createChatBotMessage(
       `✨어떤 음식을 추천해드릴까요? 🤔\n\n` +
-        `👇원하는 버튼을 아래에서 클릭하거나\n` +
+        `👇원하는 키워드를 아래에서 클릭하거나\n` +
         `✍️메세지를 입력해보세요! 💬`,
       {
         widget: 'foodOptions',

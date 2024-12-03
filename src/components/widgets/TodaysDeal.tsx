@@ -1,5 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import {
+  FiTruck,
+  FiCoffee,
+  FiPackage,
+  FiDollarSign,
+  FiClock,
+  FiMoreHorizontal,
+} from 'react-icons/fi';
+import ReviewModal from './ReviewModal';
 const ChatpickIcon = require('../../icon/Chatpick.png');
+
+const api = axios.create({
+  baseURL: 'http://localhost:3000',
+});
 
 interface DealType {
   manufacturer: string;
@@ -9,19 +23,121 @@ interface DealType {
   originalPrice: number;
   discountRate: number;
   imageUrl: string;
+  productLink: string;
+  productID: string;
 }
 
-const TodaysDeal: React.FC<any> = () => {
-  const mockDeal: DealType = {
-    manufacturer: '오픈더테이블',
-    title: '안원당 갈비탕',
-    weight: '700g',
-    currentPrice: 15920,
-    originalPrice: 17500,
-    discountRate: 9,
-    imageUrl:
-      'https://img.danawa.com/prod_img/500000/876/270/img/68270876_1.jpg?shrink=130:130&_v=20241005073111',
+interface Props {
+  initialData?: DealType;
+  skipInitialFetch?: boolean;
+  customMessage?: string;
+}
+
+const TodaysDeal: React.FC<Props> = ({
+  initialData,
+  skipInitialFetch = false,
+  customMessage = '오늘 할인율이 가장 큰 상품을 추천해줄게요',
+}) => {
+  interface ReviewCategory {
+    icon: JSX.Element;
+    keyword: string;
+    summary: string;
+    details: string[];
+  }
+
+  interface ReviewData {
+    pros: ReviewCategory[];
+    cons: ReviewCategory[];
+  }
+
+  const [deal, setDeal] = useState<DealType | null>(initialData || null);
+  const [reviewData, setReviewData] = useState<ReviewData>({
+    pros: [],
+    cons: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'pros' | 'cons'>('pros');
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [recommendation, setRecommendation] = useState<string>('');
+  const [showReviews, setShowReviews] = useState<boolean>(false);
+  const [originalReviews, setOriginalReviews] = useState<string[]>([]);
+
+  // 아이콘 매핑 함수
+  const getIcon = (iconName: string): JSX.Element => {
+    const iconMap: { [key: string]: JSX.Element } = {
+      FiTruck: <FiTruck />,
+      FiCoffee: <FiCoffee />,
+      FiPackage: <FiPackage />,
+      FiDollarSign: <FiDollarSign />,
+      FiClock: <FiClock />,
+      FiMoreHorizontal: <FiMoreHorizontal />,
+    };
+    return iconMap[iconName] || <FiMoreHorizontal />;
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let currentDeal;
+        if (initialData) {
+          setDeal(initialData);
+          currentDeal = initialData;
+        } else if (!skipInitialFetch) {
+          const dealResponse = await api.get('/api/products/todays-deal');
+          console.log('Deal Response:', dealResponse.data);
+          const dealData = dealResponse.data;
+          setDeal(dealData);
+          currentDeal = dealData;
+        }
+
+        // 리뷰 데이터 가져오기
+        if (currentDeal) {
+          const productId = currentDeal.productID;
+          console.log('Fetching reviews for product ID:', productId);
+          const reviewResponse = await api.get(
+            `/api/products/${productId}/reviews`,
+          );
+          const reviewsData = reviewResponse.data;
+          const formattedReviews: ReviewData = {
+            pros: reviewsData.pros.map((review: any) => ({
+              icon: getIcon(review.icon_name),
+              keyword: review.category_name,
+              summary: review.summary,
+              details: review.details,
+            })),
+            cons: reviewsData.cons.map((review: any) => ({
+              icon: getIcon(review.icon_name),
+              keyword: review.category_name,
+              summary: review.summary,
+              details: review.details,
+            })),
+          };
+          setReviewData(formattedReviews);
+
+          // 추천 메시지 가져오기
+          const recommendationResponse = await api.get(
+            `/api/products/${productId}/recommendation`,
+          );
+          setRecommendation(recommendationResponse.data.recommendation);
+          setOriginalReviews(
+            recommendationResponse.data.productDetails.reviews,
+          );
+        }
+      } catch (err) {
+        console.error('Error details:', err);
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [initialData, skipInitialFetch]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  if (!deal) return <div>No deals available</div>;
 
   return (
     <div style={{ maxWidth: '320px' }}>
@@ -32,7 +148,7 @@ const TodaysDeal: React.FC<any> = () => {
           fontSize: '14px',
         }}
       >
-        오늘 할인율이 가장 큰 상품을 추천해줄게요
+        {customMessage}
       </div>
 
       <div
@@ -62,8 +178,8 @@ const TodaysDeal: React.FC<any> = () => {
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
           <img
-            src={mockDeal.imageUrl}
-            alt={mockDeal.title}
+            src={deal.imageUrl}
+            alt={deal.title}
             style={{
               width: '80px',
               height: '80px',
@@ -88,30 +204,52 @@ const TodaysDeal: React.FC<any> = () => {
                   fontWeight: '400',
                 }}
               >
-                {mockDeal.manufacturer}
+                {deal.manufacturer}
               </div>
-              {mockDeal.title}{' '}
-              <span style={{ fontSize: '12px' }}>{mockDeal.weight}</span>
+              {deal.title}
             </h3>
-            <div style={{ textAlign: 'center', margin: '1px 0' }}>
+            <div style={{ marginTop: '4px' }}>
+              {/* 할인가 */}
               <span
                 style={{
-                  fontWeight: '600',
-                  color: '#03318C',
-                  fontSize: '17px',
+                  fontWeight: '700',
+                  color: '#dc2626',
+                  fontSize: '20px',
+                  display: 'inline-block',
+                  marginRight: '8px',
                 }}
               >
-                ₩{mockDeal.currentPrice.toLocaleString()}
+                ₩{deal.currentPrice.toLocaleString()}
               </span>
+              {/* 원가 */}
               <span
                 style={{
                   textDecoration: 'line-through',
                   color: '#9ca3af',
-                  fontSize: '13px',
-                  marginLeft: '6px',
+                  fontSize: '14px',
+                  display: 'inline-block',
+                  position: 'relative',
+                  top: '-2px',
                 }}
               >
-                ₩{mockDeal.originalPrice.toLocaleString()}
+                ₩{deal.originalPrice.toLocaleString()}
+              </span>
+              {/* 할인율 뱃지 */}
+              <span
+                style={{
+                  backgroundColor: '#fee2e2',
+                  color: '#dc2626',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  marginLeft: '8px',
+                  display: 'inline-block',
+                  position: 'relative',
+                  top: '-2px',
+                }}
+              >
+                {deal.discountRate}% OFF
               </span>
             </div>
             <p
@@ -126,41 +264,267 @@ const TodaysDeal: React.FC<any> = () => {
                 gap: '4px',
               }}
             >
-              <span
-                style={{
-                  backgroundColor: '#fef2f2',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  fontWeight: '600',
-                }}
-              >
-                {mockDeal.discountRate}% 할인
-              </span>
               <span>평균가보다 저렴해요!</span>
             </p>
           </div>
         </div>
       </div>
+
+      {/* 구매자 리뷰 분석 섹션 */}
       <div
         style={{
-          marginTop: '8px',
-          color: '#03318C',
-          fontSize: '14px',
-          lineHeight: '1.5',
+          marginTop: '16px',
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
         }}
       >
-        진한 사골육수로 우려낸 깊은 맛이 일품이에요. 따뜻하게 즐기기 좋은
-        메뉴로, 한 그릇 뚝딱하기 좋은 양이랍니다! 🍜
+        <h4
+          style={{
+            margin: '0 0 5px 0',
+            color: '#1f2937',
+            fontSize: '15px',
+            fontWeight: '600',
+            textAlign: 'center',
+          }}
+        >
+          구매자 리뷰 분석 from GPT-4o-mini
+        </h4>
+
+        {/* 탭 버튼 */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '8px',
+            marginBottom: '16px',
+          }}
+        >
+          <button
+            onClick={() => setActiveTab('pros')}
+            style={{
+              flex: 1,
+              padding: '8px',
+              border: 'none',
+              borderRadius: '8px',
+              backgroundColor: activeTab === 'pros' ? '#059669' : '#e5e7eb',
+              color: activeTab === 'pros' ? 'white' : '#4b5563',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            👍 장점
+          </button>
+          <button
+            onClick={() => setActiveTab('cons')}
+            style={{
+              flex: 1,
+              padding: '8px',
+              border: 'none',
+              borderRadius: '8px',
+              backgroundColor: activeTab === 'cons' ? '#dc2626' : '#e5e7eb',
+              color: activeTab === 'cons' ? 'white' : '#4b5563',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            👎 단점
+          </button>
+        </div>
+
+        {/* 리뷰 카테고리 목록 */}
+        <div>
+          {reviewData[activeTab].map((category, index) => (
+            <div
+              key={`${activeTab}-${category.keyword}`}
+              style={{
+                marginBottom: '12px',
+                backgroundColor: '#f9fafb',
+                borderRadius: '8px',
+                overflow: 'hidden',
+              }}
+            >
+              {/* 카테고리 헤더 */}
+              <div
+                onClick={() =>
+                  setExpandedCategory(
+                    expandedCategory === category.keyword
+                      ? null
+                      : category.keyword,
+                  )
+                }
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '12px',
+                  cursor: 'pointer',
+                  backgroundColor: '#f3f4f6',
+                }}
+              >
+                <span
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    color: activeTab === 'pros' ? '#059669' : '#dc2626',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                  }}
+                >
+                  {category.icon}
+                  {category.keyword}
+                </span>
+                <span
+                  style={{
+                    marginLeft: '12px',
+                    flex: 1,
+                    fontSize: '13px',
+                    color: '#4b5563',
+                    fontWeight: '600',
+                  }}
+                >
+                  {category.summary}
+                </span>
+              </div>
+
+              {/* 상세 리뷰 */}
+              {expandedCategory === category.keyword && (
+                <div
+                  style={{
+                    padding: '12px',
+                    fontSize: '13px',
+                    color: '#4b5563',
+                    backgroundColor: 'white',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '4px',
+                    }}
+                  >
+                    {category.details.map((detail, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          backgroundColor: '#e5f3ff',
+                          padding: '8px 12px',
+                          borderRadius: '12px',
+                          position: 'relative',
+                          marginLeft: '8px',
+                        }}
+                      >
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: '-8px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '0',
+                            height: '0',
+                            borderTop: '6px solid transparent',
+                            borderBottom: '6px solid transparent',
+                            borderRight: '8px solid #e5f3ff',
+                          }}
+                        />
+                        "{detail}"
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-      <div style={{ textAlign: 'center' }}>
+
+      {/* 추천 메시지 섹션 */}
+      {recommendation && (
+        <div
+          style={{
+            marginTop: '16px',
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
+          }}
+        >
+          <h4
+            style={{
+              margin: '0 0 5px 0',
+              color: '#1f2937',
+              fontSize: '15px',
+              fontWeight: '600',
+              textAlign: 'center',
+            }}
+          >
+            AI의 추천 메시지
+          </h4>
+          <div
+            style={{
+              fontSize: '14px',
+              lineHeight: '1.6',
+              color: '#4b5563',
+              padding: '8px',
+              backgroundColor: '#f9fafb',
+              borderRadius: '8px',
+              whiteSpace: 'pre-line',
+            }}
+            dangerouslySetInnerHTML={{ __html: recommendation }}
+          />
+          <button
+            onClick={() => setShowReviews(true)}
+            style={{
+              display: 'block',
+              margin: '8px auto 0',
+              padding: '6px 12px',
+              backgroundColor: '#f3f4f6',
+              border: 'none',
+              borderRadius: '6px',
+              color: '#4b5563',
+              fontSize: '13px',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#e5e7eb';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#f3f4f6';
+            }}
+          >
+            💬 실제 리뷰 보기
+          </button>
+        </div>
+      )}
+
+      {/* 리뷰 모달 컴포넌트 */}
+      <ReviewModal
+        isOpen={showReviews}
+        onClose={() => setShowReviews(false)}
+        reviews={originalReviews}
+      />
+
+      {/* 상품 보러가기 버튼 */}
+      <div
+        style={{
+          textAlign: 'right',
+          paddingRight: '50px',
+          marginTop: '16px',
+        }}
+      >
         <a
-          href="https://prod.danawa.com/bridge/loadingBridge.html?cate1=46803&cate2=56857&cate3=56877&cate4=0&pcode=68270876&cmpnyc=ED903&safe_trade=4&fee_type=T&link_pcode=2749746889&package=0&setpc=0"
+          href={deal.productLink}
           target="_blank"
           rel="noopener noreferrer"
           style={{
             display: 'inline-block',
             width: '120px',
-            marginTop: '2px',
             padding: '3px',
             backgroundColor: '#2563eb',
             color: 'white',

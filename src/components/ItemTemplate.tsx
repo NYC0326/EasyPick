@@ -1,5 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import '../styles/ItemStarRating.css';
+import ItemReview from './ItemReview';
 
 interface ItemProp {
   name: string;
@@ -7,6 +8,7 @@ interface ItemProp {
   imageUrl: string;
   purchaseLink: string;
   discount?: string;
+  rating?: number;
 }
 
 const cardStyle = {
@@ -24,11 +26,18 @@ const ItemTemplate: React.FC<ItemProp> = ({
   imageUrl,
   purchaseLink,
   discount,
+  rating,
 }) => {
   const [isFavorite, setIsFavorite] = useState(true);
+  const [isClicked, setIsClicked] = useState(false);
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
   };
+  const percentage = ((rating ?? 0) / 5) * 100;
+  const switchClicked = () => {
+    setIsClicked((prev) => !prev);
+  };
+
   return (
     <div style={cardStyle}>
       <div style={{ display: 'flex' }}>
@@ -68,7 +77,9 @@ const ItemTemplate: React.FC<ItemProp> = ({
               objectFit: 'cover',
             }}
           />
-          <a style={{ color: '#F8B91F', textAlign: 'center' }}> ★★★★★ </a>
+          <div className="star-rating">
+            <div className="stars" style={{ width: `${percentage}%` }}></div>
+          </div>
         </div>
 
         <div style={{ width: '75%' }}>
@@ -111,6 +122,7 @@ const ItemTemplate: React.FC<ItemProp> = ({
                 borderRadius: '7px',
                 width: '11%',
               }}
+              onClick={() => window.open(purchaseLink, '_blank')}
             >
               BUY
             </p>
@@ -123,6 +135,7 @@ const ItemTemplate: React.FC<ItemProp> = ({
                 borderRadius: '7px',
                 width: '18%',
               }}
+              onClick={() => switchClicked()}
             >
               리뷰 보기
             </p>
@@ -134,6 +147,7 @@ const ItemTemplate: React.FC<ItemProp> = ({
           <p style={{ color: '#F27A5E', textAlign: 'center' }}>{discount}</p>
         )}
       </div>
+      <ItemReview visible={isClicked} />
     </div>
   );
 };

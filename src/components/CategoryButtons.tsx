@@ -1,17 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const categories = [
-  '족발/보쌈',
-  '탕/찜/조림',
-  '생선구이',
-  '볶음요리',
-  '참치/햄/통조림',
-  '돈까스/떡갈비',
-  '떡볶이/순대',
-  '김치',
-  '만두/교자',
-];
+const categories = ['만두', '즉석국', '밀키트'];
 
 const CategoryButtons: React.FC = () => {
   const navigate = useNavigate();

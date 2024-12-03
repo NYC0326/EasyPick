@@ -1,0 +1,25 @@
+.star-rating {
+    font-size: 15px;
+    position: relative;
+    display: inline-block;
+    width: max-content;
+    unicode-bidi: bidi-override;
+    color: #ccc;
+    overflow: hidden;
+}
+
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    overflow: hidden;
+    color: #fc0;
+    white-space: nowrap;
+}
+
+.star-rating::before,
+.stars::before {
+    content: "★★★★★";
+    display: block;
+}

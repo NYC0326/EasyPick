@@ -48,12 +48,14 @@ const TodaysDeal: React.FC<Props> = ({
   interface ReviewData {
     pros: ReviewCategory[];
     cons: ReviewCategory[];
+    reviewNum: number;
   }
 
   const [deal, setDeal] = useState<DealType | null>(initialData || null);
   const [reviewData, setReviewData] = useState<ReviewData>({
     pros: [],
     cons: [],
+    reviewNum: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -112,6 +114,7 @@ const TodaysDeal: React.FC<Props> = ({
               summary: review.summary,
               details: review.details,
             })),
+            reviewNum: reviewsData.reviewNum,
           };
           setReviewData(formattedReviews);
 
@@ -283,13 +286,13 @@ const TodaysDeal: React.FC<Props> = ({
         <h4
           style={{
             margin: '0 0 5px 0',
-            color: '#1f2937',
+            color: '#6b7280',
             fontSize: '15px',
             fontWeight: '600',
             textAlign: 'center',
           }}
         >
-          구매자 리뷰 분석 from GPT-4o-mini
+          AI가 {reviewData.reviewNum.toLocaleString()}개의 상품평을 정리했어요!
         </h4>
 
         {/* 탭 버튼 */}

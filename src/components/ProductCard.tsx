@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 interface ProductProps {
   manufacturer: string;
   name: string;
-  weight: string;
   price: string;
   originalPrice: string;
   imageUrl: string;
@@ -25,7 +24,6 @@ const cardStyle = {
 const ProductCard: React.FC<ProductProps> = ({
   manufacturer,
   name,
-  weight,
   price,
   originalPrice,
   imageUrl,
@@ -105,15 +103,6 @@ const ProductCard: React.FC<ProductProps> = ({
           }}
         >
           {name}
-          <span
-            style={{
-              fontSize: '0.75rem',
-              color: '#6b7280',
-              fontWeight: 'normal',
-            }}
-          >
-            {weight}
-          </span>
         </h3>
       </div>
       <p

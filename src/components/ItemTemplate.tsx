@@ -3,6 +3,7 @@ import '../styles/ItemStarRating.css';
 import ItemReview from './ItemReview';
 
 interface ItemProp {
+  key: number;
   name: string;
   weight: string;
   imageUrl: string;
@@ -21,6 +22,7 @@ const cardStyle = {
 };
 
 const ItemTemplate: React.FC<ItemProp> = ({
+  key,
   name,
   weight,
   imageUrl,
@@ -63,10 +65,7 @@ const ItemTemplate: React.FC<ItemProp> = ({
           />
         </button>
 
-        <div
-          style={{ display: 'inline', width: '25%', textAlign: 'center' }}
-          onClick={() => window.open(purchaseLink, '_blank')}
-        >
+        <div style={{ display: 'inline', width: '25%', textAlign: 'center' }}>
           <img
             src={imageUrl}
             alt={name}

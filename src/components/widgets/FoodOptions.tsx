@@ -42,7 +42,7 @@ const FoodOptions: React.FC<{ actionProvider: any }> = ({ actionProvider }) => {
       handler: () => actionProvider.handleEasyCooking(),
     },
     {
-      text: '리뷰 많은',
+      text: '양많은',
       handler: () => actionProvider.handlePopular(),
     },
     {

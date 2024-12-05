@@ -3,161 +3,239 @@ import React, { useState } from 'react';
 interface ProductProps {
   manufacturer: string;
   name: string;
-  weight: string;
   price: string;
   originalPrice: string;
   imageUrl: string;
   purchaseLink: string;
+  discountRate: number;
+  onReviewClick: () => void;
 }
-
-const cardStyle = {
-  border: '1px solid #e5e7eb',
-  borderRadius: '1rem',
-  padding: '1.5rem',
-  textAlign: 'center' as const,
-  width: 'calc(50% - 1rem)',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  transition: 'transform 0.3s, box-shadow 0.3s',
-  cursor: 'pointer',
-  position: 'relative' as const,
-};
 
 const ProductCard: React.FC<ProductProps> = ({
   manufacturer,
   name,
-  weight,
   price,
   originalPrice,
   imageUrl,
   purchaseLink,
+  discountRate,
+  onReviewClick,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
-
   return (
     <div
-      style={cardStyle}
+      style={{
+        border: '1px solid #e5e7eb',
+        borderRadius: '16px',
+        padding: '20px',
+        width: '200px',
+        height: '380px',
+        backgroundColor: 'white',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
       onMouseOver={(e) => {
-        (e.currentTarget as HTMLDivElement).style.cssText +=
-          'transform: scale(1.05); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);';
+        e.currentTarget.style.transform = 'translateY(-8px)';
+        e.currentTarget.style.boxShadow = '0 12px 20px -8px rgba(0, 0, 0, 0.2)';
       }}
       onMouseOut={(e) => {
-        (e.currentTarget as HTMLDivElement).style.cssText +=
-          'transform: scale(1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
       }}
     >
+      {/* 할인율 뱃지 */}
+      {discountRate > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            backgroundColor: '#dc2626',
+            color: 'white',
+            padding: '6px 12px',
+            borderRadius: '20px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 4px rgba(220, 38, 38, 0.3)',
+          }}
+        >
+          {discountRate}% OFF
+        </div>
+      )}
+
+      {/* 찜하기 버튼 */}
       <button
-        onClick={toggleFavorite}
+        onClick={() => setIsFavorite(!isFavorite)}
         style={{
           position: 'absolute',
-          top: '1rem',
-          right: '0.5rem',
-          backgroundColor: 'transparent',
+          top: '12px',
+          right: '12px',
+          backgroundColor: 'white',
           border: 'none',
+          borderRadius: '50%',
+          width: '36px',
+          height: '36px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           cursor: 'pointer',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          transition: 'transform 0.2s',
         }}
       >
         <img
           src={
-            !isFavorite
-              ? require('../icon/no_click_heart.png')
-              : require('../icon/clicked_heart.png')
+            isFavorite
+              ? require('../icon/clicked_heart.png')
+              : require('../icon/no_click_heart.png')
           }
-          alt={!isFavorite ? '찜하지 않은 상태' : '찜한 상태'}
-          style={{ width: '24px', height: '24px' }}
+          alt={isFavorite ? '찜한 상태' : '찜하지 않은 상태'}
+          style={{ width: '20px', height: '20px' }}
         />
       </button>
-      <img
-        src={imageUrl}
-        alt={name}
-        style={{
-          width: '100px',
-          height: '100px',
-          borderRadius: '0.5rem',
-          objectFit: 'cover',
-        }}
-      />
-      <div style={{ margin: '0.5rem 0' }}>
-        <p
+
+      {/* 상품 이미지 */}
+      <div style={{ marginBottom: '16px', textAlign: 'center', flexShrink: 0 }}>
+        <img
+          src={imageUrl}
+          alt={name}
           style={{
-            fontSize: '0.8rem',
-            color: '#6b7280',
-            marginBottom: '0.2rem',
+            width: '180px',
+            height: '180px',
+            objectFit: 'cover',
+            borderRadius: '12px',
           }}
-        >
-          {manufacturer}
-        </p>
-        <h3
-          style={{
-            fontSize: '0.875rem',
-            fontWeight: '500',
-            color: '#1f2937',
-            margin: 0,
-            display: 'flex',
-            gap: '4px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            width: '100%',
-          }}
-        >
-          {name}
-          <span
+        />
+      </div>
+
+      {/* 상품 정보 */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1 }}>
+          <p
             style={{
-              fontSize: '0.75rem',
               color: '#6b7280',
-              fontWeight: 'normal',
+              fontSize: '14px',
+              marginBottom: '4px',
+              fontWeight: '500',
             }}
           >
-            {weight}
-          </span>
-        </h3>
+            {manufacturer}
+          </p>
+          <h3
+            style={{
+              fontSize: '16px',
+              margin: '0 0 12px 0',
+              color: '#1f2937',
+              fontWeight: '600',
+              lineHeight: '1.4',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {name}
+          </h3>
+        </div>
+
+        {/* 가격 정보와 버튼을 하단에 고정 */}
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '16px',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '20px',
+                fontWeight: 'bold',
+                color: '#03318C',
+              }}
+            >
+              ₩{Number(price).toLocaleString()}
+            </span>
+            <span
+              style={{
+                fontSize: '14px',
+                color: '#9ca3af',
+                textDecoration: 'line-through',
+                marginTop: '3px',
+              }}
+            >
+              ₩{Number(originalPrice).toLocaleString()}
+            </span>
+          </div>
+
+          {/* 버튼 그룹 수정 */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '6px', // 버튼 사이 간격 줄임
+            }}
+          >
+            <button
+              onClick={onReviewClick}
+              style={{
+                padding: '6px 12px',
+                fontSize: '13px',
+                backgroundColor: 'white',
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                color: '#6b7280',
+                fontWeight: '500',
+                marginLeft: '22px',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+                minWidth: 'fit-content',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#f3f4f6';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = 'white';
+              }}
+            >
+              리뷰 보기
+            </button>
+            <a
+              href={purchaseLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                width: '100%',
+                padding: '6px 12px',
+                fontSize: '13px',
+                backgroundColor: '#03318C',
+                border: 'none',
+                borderRadius: '6px',
+                color: 'white',
+                textDecoration: 'none',
+                textAlign: 'center',
+                fontWeight: '500',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+                minWidth: 'fit-content',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#1d4ed8';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#03318C';
+              }}
+            >
+              구매하기
+            </a>
+          </div>
+        </div>
       </div>
-      <p
-        style={{
-          color: '#03318C',
-          fontWeight: 'bold',
-          fontSize: '1.25rem',
-          margin: '0.25rem 0',
-        }}
-      >
-        ₩{price}
-      </p>
-      <p
-        style={{
-          textDecoration: 'line-through',
-          color: '#black',
-          fontSize: '0.875rem',
-          margin: '0.25rem 0',
-        }}
-      >
-        ₩{originalPrice}
-      </p>
-      <button
-        style={{
-          marginTop: '0.5rem',
-          padding: '0.55rem 0.75rem',
-          fontSize: '0.875rem',
-          color: 'white',
-          backgroundColor: '#03318C',
-          border: 'none',
-          borderRadius: '0.5rem',
-          cursor: 'pointer',
-          transition: 'background-color 0.3s',
-        }}
-        onClick={() => window.open(purchaseLink, '_blank')}
-        onMouseOver={(e) => {
-          (e.target as HTMLButtonElement).style.backgroundColor = '#4338ca';
-        }}
-        onMouseOut={(e) => {
-          (e.target as HTMLButtonElement).style.backgroundColor = '#4f46e5';
-        }}
-      >
-        구매하러 가기
-      </button>
     </div>
   );
 };

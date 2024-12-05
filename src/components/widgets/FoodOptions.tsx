@@ -46,7 +46,7 @@ const FoodOptions: React.FC<{ actionProvider: any }> = ({ actionProvider }) => {
       handler: () => actionProvider.handlePopular(),
     },
     {
-      text: '매콤한',
+      text: '달콤한',
       handler: () => actionProvider.handleSpicy(),
     },
   ];

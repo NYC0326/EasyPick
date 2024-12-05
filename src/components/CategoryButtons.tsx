@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const categories = ['만두', '즉석국', '밀키트'];
+const categories = ['만두', '즉석국', '밀키트', '치킨', '튀김', '떡갈비'];
 
 const CategoryButtons: React.FC = () => {
   const navigate = useNavigate();

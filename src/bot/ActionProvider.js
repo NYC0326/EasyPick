@@ -17,7 +17,7 @@ class ActionProvider {
         <span style={{ fontWeight: 'bold', color: '#729DF2' }}>가성비</span>
         를 선택하셨네요! 💰
         <br />
-        추천 메뉴를 찾아볼게요.
+        리뷰 기반으로 추천 메뉴를 찾아볼게요.
       </div>,
       {
         withAvatar: true,
@@ -62,7 +62,7 @@ class ActionProvider {
         <span style={{ fontWeight: 'bold', color: '#729DF2' }}>빠른배송</span>
         을 선택하셨네요! 🚚
         <br />
-        추천 메뉴를 찾아볼게요.
+        리뷰 기반으로 추천 메뉴를 찾아볼게요.
       </div>,
       {
         withAvatar: true,
@@ -111,7 +111,7 @@ class ActionProvider {
         </span>
         를 선택하셨네요! 👨‍🍳
         <br />
-        추천 메뉴를 찾아볼게요.
+        리뷰 기반으로 추천 메뉴를 찾아볼게요.
       </div>,
       {
         withAvatar: true,
@@ -149,14 +149,14 @@ class ActionProvider {
   handlePopular = async () => {
     const userMessage = {
       type: 'user',
-      message: '리뷰 많은',
+      message: '양많은',
     };
     const botMessage = this.createChatbotMessage(
       <div>
-        <span style={{ fontWeight: 'bold', color: '#729DF2' }}>리뷰 많은</span>
+        <span style={{ fontWeight: 'bold', color: '#729DF2' }}>양많은</span>
         을 선택하셨네요! ⭐
         <br />
-        추천 메뉴를 보여드릴게요.
+        리뷰 기반으로 추천 메뉴를 보여드릴게요.
       </div>,
       {
         withAvatar: true,
@@ -166,7 +166,7 @@ class ActionProvider {
     this.updateChatbotState(userMessage, botMessage);
 
     try {
-      const response = await fetch(`/api/products/recommend/리뷰많은`);
+      const response = await fetch(`/api/products/recommend/양많은`);
       const recommendations = await response.json();
       console.log('📦 받은 추천 결과:', recommendations);
       recommendations.forEach((product) => {
@@ -174,7 +174,7 @@ class ActionProvider {
           <TodaysDeal
             initialData={product}
             skipInitialFetch={true}
-            customMessage="많은 분들이 선택한 인기 상품이에요! ⭐"
+            customMessage="양이 많은 상품이에요! ⭐"
           />,
           {
             withAvatar: true,
@@ -201,7 +201,7 @@ class ActionProvider {
         <span style={{ fontWeight: 'bold', color: '#729DF2' }}>달콤한</span>
         을 선택하셨네요! 🌶️
         <br />
-        추천 메뉴를 찾아볼게요.
+        리뷰 기반으로 추천 메뉴를 찾아볼게요.
       </div>,
       {
         withAvatar: true,
@@ -285,7 +285,7 @@ class ActionProvider {
   updateChatbotState = (userMessage, botMessage) => {
     this.setState((prevState) => ({
       ...prevState,
-      messages: [...prevState.messages, botMessage],
+      messages: [...prevState.messages, userMessage, botMessage],
     }));
   };
 }

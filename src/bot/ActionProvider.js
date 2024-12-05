@@ -152,11 +152,7 @@ class ActionProvider {
       return;
     }
 
-    // 사용자 메시지 생성 및 추가
-    const userMessage = {
-      type: 'user',
-      message: query,
-    };
+    // 사용자 메시지는 MessageParser에서 이미 추가되었으므로 여기서는 생략
 
     // 로딩 메시지 생성
     const loadingMessage = this.createChatbotMessage(
@@ -167,8 +163,11 @@ class ActionProvider {
       },
     );
 
-    // 메시지 추가
-    this.updateChatbotState(userMessage, loadingMessage);
+    // 로딩 메시지만 추가
+    this.setState((prev) => ({
+      ...prev,
+      messages: [...prev.messages, loadingMessage],
+    }));
 
     try {
       const response = await fetch('/api/products/natural-query', {

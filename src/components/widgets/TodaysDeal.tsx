@@ -50,6 +50,7 @@ interface DealType {
   imageUrl: string;
   productLink: string;
   productID: string;
+  scoreReview: number;
 }
 
 interface Props {
@@ -383,6 +384,73 @@ const TodaysDeal: React.FC<Props> = ({
     );
   };
 
+  const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
+    const MAX_STARS = 5;
+    const fullStars = Math.floor(rating);
+    const partialStar = rating % 1;
+    const emptyStars = MAX_STARS - Math.ceil(rating);
+
+    return (
+      <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+        {/* 꽉 찬 별 */}
+        {Array(fullStars)
+          .fill('★')
+          .map((_, i) => (
+            <span key={`full-${i}`} style={{ color: '#fbbf24' }}>
+              ★
+            </span>
+          ))}
+
+        {/* 부분 별 (비율로 표시) */}
+        {partialStar > 0 && (
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <span style={{ color: '#e5e7eb' }}>★</span>
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                overflow: 'hidden',
+                width: `${partialStar * 100}%`,
+              }}
+            >
+              <span style={{ color: '#fbbf24' }}>★</span>
+            </div>
+          </div>
+        )}
+
+        {/* 빈 별 */}
+        {Array(emptyStars)
+          .fill('★')
+          .map((_, i) => (
+            <span key={`empty-${i}`} style={{ color: '#e5e7eb' }}>
+              ★
+            </span>
+          ))}
+
+        <span
+          style={{
+            marginLeft: '4px',
+            fontSize: '13px',
+            color: '#666',
+            fontWeight: '500',
+          }}
+        >
+          {rating}
+        </span>
+        <span
+          style={{
+            color: '#9ca3af',
+            fontSize: '12px',
+            marginLeft: '2px',
+          }}
+        >
+          ({reviewData.reviewNum.toLocaleString()})
+        </span>
+      </div>
+    );
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!deal) return <div>No deals available</div>;
@@ -456,6 +524,19 @@ const TodaysDeal: React.FC<Props> = ({
               </div>
               {deal.title}
             </h3>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                margin: '4px 0',
+                fontSize: '13px',
+                color: '#666',
+              }}
+            >
+              <RatingStars rating={deal.scoreReview} />
+            </div>
             <div style={{ marginTop: '4px' }}>
               {/* 할인가 */}
               <span

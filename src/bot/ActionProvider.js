@@ -146,6 +146,92 @@ class ActionProvider {
     }
   };
 
+  handleNaturalQuery = async (query) => {
+    if (!query || typeof query !== 'string') {
+      console.error('Invalid query:', query);
+      return;
+    }
+
+    // 사용자 메시지 생성 및 추가
+    const userMessage = {
+      type: 'user',
+      message: query,
+    };
+
+    // 로딩 메시지 생성
+    const loadingMessage = this.createChatbotMessage(
+      '잠시만 기다려주세요... 맛있는 음식을 찾아볼게요! 🔍',
+      {
+        withAvatar: true,
+        delay: 500,
+      },
+    );
+
+    // 메시지 추가
+    this.setState((prev) => ({
+      ...prev,
+      messages: [...prev.messages, userMessage, loadingMessage],
+    }));
+
+    try {
+      const response = await fetch('/api/products/natural-query', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      const data = await response.json();
+
+      // 로딩 메시지 제거
+      this.setState((prev) => ({
+        ...prev,
+        messages: prev.messages.filter((msg) => msg !== loadingMessage),
+      }));
+
+      if (data.success) {
+        // 추천 메시지 추가
+        const recommendationMessage = this.createChatbotMessage(
+          data.recommendation,
+          {
+            withAvatar: true,
+            delay: 500,
+          },
+        );
+
+        this.setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages, recommendationMessage],
+        }));
+      } else {
+        throw new Error('Failed to get recommendations');
+      }
+    } catch (error) {
+      console.error('Error getting recommendations:', error);
+
+      // 로딩 메시지 제거
+      this.setState((prev) => ({
+        ...prev,
+        messages: prev.messages.filter((msg) => msg !== loadingMessage),
+      }));
+
+      // 에러 메시지 추가
+      const errorMessage = this.createChatbotMessage(
+        '죄송해요, 추천을 가져오는 중에 문제가 발생했어요. 다시 시도해주시겠어요? 😥',
+        {
+          withAvatar: true,
+          delay: 500,
+        },
+      );
+
+      this.setState((prev) => ({
+        ...prev,
+        messages: [...prev.messages, errorMessage],
+      }));
+    }
+  };
+
   handlePopular = async () => {
     const userMessage = {
       type: 'user',
@@ -283,10 +369,19 @@ class ActionProvider {
   };
 
   updateChatbotState = (userMessage, botMessage) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      messages: [...prevState.messages, botMessage],
-    }));
+    this.setState((prevState) => {
+      const newMessages = [...prevState.messages];
+      if (userMessage) {
+        newMessages.push(userMessage);
+      }
+      if (botMessage) {
+        newMessages.push(botMessage);
+      }
+      return {
+        ...prevState,
+        messages: newMessages,
+      };
+    });
   };
 }
 

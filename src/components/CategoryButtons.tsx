@@ -53,7 +53,9 @@ const CategoryButtons: React.FC = () => {
               (e.target as HTMLButtonElement).style.backgroundColor = '#f3f4f6';
               (e.target as HTMLButtonElement).style.transform = 'scale(1)';
             }}
-            onClick={() => navigate('/search-result/')}
+            onClick={() =>
+              navigate('/search-result/', { state: { categorygogo: category } })
+            }
           >
             {category}
           </button>

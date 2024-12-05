@@ -168,10 +168,7 @@ class ActionProvider {
     );
 
     // 메시지 추가
-    this.setState((prev) => ({
-      ...prev,
-      messages: [...prev.messages, userMessage, loadingMessage],
-    }));
+    this.updateChatbotState(userMessage, loadingMessage);
 
     try {
       const response = await fetch('/api/products/natural-query', {
@@ -190,20 +187,26 @@ class ActionProvider {
         messages: prev.messages.filter((msg) => msg !== loadingMessage),
       }));
 
-      if (data.success) {
-        // 추천 메시지 추가
-        const recommendationMessage = this.createChatbotMessage(
-          data.recommendation,
-          {
-            withAvatar: true,
-            delay: 500,
-          },
-        );
+      if (data.success && data.products) {
+        // 각 상품에 대해 TodaysDeal 컴포넌트 생성
+        data.products.forEach((product) => {
+          const recommendationMessage = this.createChatbotMessage(
+            <TodaysDeal
+              initialData={product}
+              skipInitialFetch={true}
+              customMessage={`"${query}"와(과) 관련된 상품이에요! ✨`}
+            />,
+            {
+              withAvatar: true,
+              delay: 1000,
+            },
+          );
 
-        this.setState((prev) => ({
-          ...prev,
-          messages: [...prev.messages, recommendationMessage],
-        }));
+          this.setState((prev) => ({
+            ...prev,
+            messages: [...prev.messages, recommendationMessage],
+          }));
+        });
       } else {
         throw new Error('Failed to get recommendations');
       }

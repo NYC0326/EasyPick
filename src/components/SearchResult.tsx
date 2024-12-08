@@ -25,7 +25,7 @@ interface SearchProduct {
 const SearchResult: React.FC<SearchProduct> = ({ category }) => {
   const location = useLocation();
   const [products, setProducts] = useState<Product[]>([]); // 제품의 타입을 지정
-  const [orderBy, setOrderBy] = useState('score'); // 정렬 기준 상태 추가
+  const [orderBy, setOrderBy] = useState('score'); // 기본값을 'score'로 설정
   const length = products.length; // 제품 수 업데이트
 
   useEffect(() => {
@@ -35,17 +35,8 @@ const SearchResult: React.FC<SearchProduct> = ({ category }) => {
         console.log(finalCategory);
         const params = new URLSearchParams();
         params.append('category', finalCategory);
-        // 파라미터 영문으로 변경
-        if (orderBy === '최다 리뷰순') {
-          setOrderBy('review');
-          params.append('orderBy', 'review');
-        } else if (orderBy === '평점순') {
-          setOrderBy('score');
-          params.append('orderBy', 'score');
-        } else if (orderBy === '최저가순') {
-          setOrderBy('price');
-          params.append('orderBy', 'price');
-        }
+        params.append('orderBy', orderBy);
+
         const response = await fetch(`
           /api/products/search?${params.toString()}`); // GET 요청
         const data = await response.json();
@@ -55,7 +46,7 @@ const SearchResult: React.FC<SearchProduct> = ({ category }) => {
       }
     };
     fetchProducts();
-  }, [orderBy]); // orderBy가 변경될 때마다 요청
+  }, [orderBy, location.state.categorygogo]); // orderBy 의존성 추가
 
   return (
     <div
@@ -106,7 +97,7 @@ const SearchResult: React.FC<SearchProduct> = ({ category }) => {
             value={orderBy}
             onChange={(e) => setOrderBy(e.target.value)}
           >
-            <option value="score">평점 순</option>
+            <option value="score">평점순</option>
             <option value="review">최다 리뷰순</option>
             <option value="price">최저가순</option>
           </select>

@@ -28,7 +28,7 @@ const SearchResult: React.FC<SearchProduct> = ({ category }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const finalCategory = category || '밀키트';
+        const finalCategory = location.state.categorygogo || '밀키트';
         console.log(finalCategory);
         const params = new URLSearchParams();
         params.append('category', finalCategory);

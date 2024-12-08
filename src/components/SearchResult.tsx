@@ -1,4 +1,4 @@
-// src/components/Favorite.tsx
+// src/components/SearchResult.tsx
 import React, { useEffect, useState } from 'react';
 import Footer from './Footer';
 import Header from './Header';
@@ -10,9 +10,12 @@ interface Product {
   product_name: string;
   img_url: string;
   score_review: number;
-  product_link: string; // 필요한 다른 속성 추가
+  product_link: string;
   brand: string;
   current_price: number;
+  regular_price: number;
+  discount_rate: number;
+  review_num: number;
 }
 
 interface SearchProduct {
@@ -71,44 +74,66 @@ const SearchResult: React.FC<SearchProduct> = ({ category }) => {
           flex: 1,
           width: '100%',
           margin: '0 auto',
+          padding: '1rem',
         }}
       >
         <SearchHeader />
         <div
           style={{
             display: 'flex',
-            padding: '0rem 0',
+            padding: '1rem 0',
+            alignItems: 'center',
           }}
         >
-          <a style={{ width: '15%', whiteSpace: 'nowrap' }}>전체 상품</a>
-          <a style={{ color: '#1F64BF', width: '60%' }}> 총 {length}개 </a>
-          <select
-            style={{ marginLeft: 'auto' }}
-            value={orderBy}
-            onChange={(e) => setOrderBy(e.target.value)} // 정렬 기준 변경 시 상태 업데이트
+          <span style={{ fontSize: '1.1rem', color: '#666' }}>전체 상품</span>
+          <span
+            style={{
+              color: '#03318C',
+              marginLeft: '1rem',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+            }}
           >
-            <option value="recent">평점 순</option>
-            <option value="popular">최다 리뷰순</option>
-            <option value="lowprice">최저가순</option>
+            총 {length}개
+          </span>
+          <select
+            style={{
+              marginLeft: 'auto',
+              padding: '8px',
+              borderRadius: '8px',
+              border: '1px solid #ddd',
+            }}
+            value={orderBy}
+            onChange={(e) => setOrderBy(e.target.value)}
+          >
+            <option value="score">평점 순</option>
+            <option value="review">최다 리뷰순</option>
+            <option value="price">최저가순</option>
           </select>
         </div>
-        <hr color="gray" />
+        <hr style={{ border: '1px solid #eee' }} />
 
-        {products.map(
-          (
-            product,
-            index, // 제품 목록 렌더링
-          ) => (
+        <div
+          style={{
+            display: 'grid',
+            gap: '1rem',
+            padding: '1rem 0',
+          }}
+        >
+          {products.map((product, index) => (
             <ItemTemplate
-              key={index} // 각 아이템의 고유 키로 product_link 사용
-              name={product.product_name} // 실제 제품 이름으로 변경
-              imageUrl={product.img_url} // 실제 이미지 URL로 변경
-              purchaseLink={product.product_link} // 실제 구매 링크로 변경
+              key={index}
+              name={product.product_name}
+              imageUrl={product.img_url}
+              purchaseLink={product.product_link}
               rating={product.score_review}
               current_price={product.current_price}
+              original_price={product.regular_price}
+              discount={product.discount_rate}
+              review_num={product.review_num}
             />
-          ),
-        )}
+          ))}
+        </div>
       </div>
       <Footer />
     </div>

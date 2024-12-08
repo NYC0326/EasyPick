@@ -1,5 +1,6 @@
 // src/bot/ActionProvider.js
 import TodaysDeal from '../components/widgets/TodaysDeal';
+import parse from 'html-react-parser';
 
 class ActionProvider {
   constructor(createChatbotMessage, setStateFunc) {
@@ -151,12 +152,9 @@ class ActionProvider {
       console.error('Invalid query:', query);
       return;
     }
-
-    // 사용자 메시지는 MessageParser에서 이미 추가되었으므로 여기서는 생략
-
     // 로딩 메시지 생성
     const loadingMessage = this.createChatbotMessage(
-      '잠시만 기다려주세요... 맛있는 음식을 찾아볼게요! 🔍',
+      '잠시만 기다려주세요... 여러분의 취향에 맞는 음식을 찾아볼게요! 🔍',
       {
         withAvatar: true,
         delay: 500,
@@ -187,7 +185,27 @@ class ActionProvider {
       }));
 
       if (data.success && data.products) {
-        // 각 상품에 대해 TodaysDeal 컴포넌트 생성
+        // 먼저 GPT 답변 메시지 추가
+        if (data.answer) {
+          const FormattedMessage = () => (
+            <div dangerouslySetInnerHTML={{ __html: data.answer }} />
+          );
+
+          const answerMessage = this.createChatbotMessage(
+            <FormattedMessage />,
+            {
+              withAvatar: true,
+              delay: 500,
+            },
+          );
+
+          this.setState((prev) => ({
+            ...prev,
+            messages: [...prev.messages, answerMessage],
+          }));
+        }
+
+        // 그 다음 상품 컴포넌트들 추가
         data.products.forEach((product) => {
           const recommendationMessage = this.createChatbotMessage(
             <TodaysDeal

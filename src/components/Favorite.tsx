@@ -134,6 +134,7 @@ const Favorite: React.FC = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
+        marginBottom: '100px',
       }}
     >
       <Header />

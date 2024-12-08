@@ -4,11 +4,12 @@ import ItemReview from './ItemReview';
 
 interface ItemProp {
   name: string;
-  weight: string;
   imageUrl: string;
   purchaseLink: string;
   discount?: string;
   rating?: number;
+  favorite?: boolean;
+  current_price: number;
 }
 
 const cardStyle = {
@@ -22,13 +23,14 @@ const cardStyle = {
 
 const ItemTemplate: React.FC<ItemProp> = ({
   name,
-  weight,
   imageUrl,
   purchaseLink,
   discount,
   rating,
+  favorite,
+  current_price,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(favorite);
   const [isClicked, setIsClicked] = useState(false);
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
@@ -63,10 +65,7 @@ const ItemTemplate: React.FC<ItemProp> = ({
           />
         </button>
 
-        <div
-          style={{ display: 'inline', width: '25%', textAlign: 'center' }}
-          onClick={() => window.open(purchaseLink, '_blank')}
-        >
+        <div style={{ display: 'inline', width: '25%', textAlign: 'center' }}>
           <img
             src={imageUrl}
             alt={name}
@@ -93,13 +92,13 @@ const ItemTemplate: React.FC<ItemProp> = ({
             }}
             onClick={() => window.open(purchaseLink, '_blank')}
           >
-            {name} {weight}
+            {name}
           </h3>
           <div style={{ display: 'flex', alignItems: 'center', height: '30%' }}>
             <p style={{ color: '#707070', width: '10%', textAlign: 'left' }}>
-              1개
+              {rating}점
             </p>
-            <p style={{ width: '60%', textAlign: 'left' }}> 100g당 775원 </p>
+            <p style={{ width: '60%', textAlign: 'left' }}> / 5점 </p>
             <p
               style={{
                 color: '#1F64BF',
@@ -109,7 +108,7 @@ const ItemTemplate: React.FC<ItemProp> = ({
                 textAlign: 'right',
               }}
             >
-              <b>8,140원</b>
+              <b>{current_price.toLocaleString()}원</b>
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'right' }}>

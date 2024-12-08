@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const categories = ['만두', '즉석국', '밀키트', '치킨', '튀김', '떡갈비'];
 
-const CategoryButtons: React.FC = () => {
+const CategoryButtons: React.FC = (category) => {
   const navigate = useNavigate();
 
   return (
@@ -53,7 +53,9 @@ const CategoryButtons: React.FC = () => {
               (e.target as HTMLButtonElement).style.backgroundColor = '#f3f4f6';
               (e.target as HTMLButtonElement).style.transform = 'scale(1)';
             }}
-            onClick={() => navigate('/search-result/')}
+            onClick={() =>
+              navigate('/search-result/', { state: { categorygogo: category } })
+            }
           >
             {category}
           </button>
